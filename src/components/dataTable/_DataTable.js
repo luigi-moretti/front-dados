@@ -19,6 +19,7 @@ export default function DataTable({ rows, columns }) {
   const handleMudaPadeSize = (parametros) => {
     setPageSize(parametros.pageSize);
   }
+  console.log(rows)
 
   return (
       <div style={{ height: 400, width: '100%' }}>

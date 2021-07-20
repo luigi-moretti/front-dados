@@ -12,9 +12,10 @@ function FormFilter({setParametros}) {
     const [dataFinal, setDataFinal] = useState(moment().format('YYYY-MM-DD HH:mm:ss'));
 
     const handleSubmit = (dataInicial, dataFinal)=>{
-        let dados = [dataInicial, dataFinal]
-        console.log(dados);
-        setParametros(dados);
+        setParametros({
+            dataInicial:dataInicial,
+            dataFinal:dataFinal
+        });
     }
 
     return (

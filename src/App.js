@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import { Container, AppBar, Toolbar} from "@material-ui/core";
 import Typography from '@material-ui/core/Typography';
-import DataTable from './components/dataTable/DataTable.js';
+import DataTable from './components/dataTable/DataTable';
 import FormFilter from './components/formFilter/FormFilter';
 import axios from 'axios';
 
@@ -10,33 +10,22 @@ function App() {
 
   const[rows, setRows] = useState([]);
   const[columns, setColumns] = useState([]);
-  const[parametros,setParametros] = useState([]);
+  const[parametros,setParametros] = useState({});
 
-  function getDados(){
-    axios.get('http://localhost:3001/api/mdfe/')
+  function getDados(parametros){
+    axios.get(`http://localhost:3001/api/mdfe/?dataInicial=${parametros.dataInicial}&dataFinal=${parametros.dataFinal}`)
       .then(res=>{
         const dados = res.data;
         setRows(dados);
         const extraiCabecalho = Object.keys(dados[0]);
-        const colunas = extraiCabecalho.map((item)=>{
-          const dado = dados[0];
-          const tamanho = dado.[item === 'id'? 'EMITENTEMDFE' : item].length;
-          return{
-            field: item,
-            headerName: item,
-            width: tamanho*13,
-            editable: false,
-          }
-        });
-        setColumns(colunas);
+        setColumns(extraiCabecalho);
       })
       .catch(erro=>{
         console.log(erro)
       })
   };
   useEffect(()=>{
-    getDados();
-    console.log(parametros);
+    getDados(parametros);
   },[parametros])
 
   return (
