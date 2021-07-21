@@ -16,7 +16,7 @@ function App() {
   const [parametros, setParametros] = useState({});
 
   function getDados(parametros) {
-    axios.get(`http://localhost:3001/api/${parametros.tipoDado}/?dataInicial=${parametros.dataInicial}&dataFinal=${parametros.dataFinal}`)
+    axios.get(`http://localhost:3001/api/${parametros.tipoDado}/?dataInicial=${parametros.dataInicial}&dataFinal=${parametros.dataFinal}&status=${parametros.status}&chaves=${parametros.chaves}`)
       .then(res => {
         const dados = res.data;
         setRows(dados);
@@ -28,8 +28,7 @@ function App() {
       })
   };
   useEffect(() => {
-    console.log(parametros.tipoDado)
-    if(parametros.tipoDado !== ''){
+    if(parametros.tipoDado){
       getDados(parametros);
     }
   }, [parametros])
@@ -52,10 +51,16 @@ function App() {
         </Container>
         <Container>
           <Box m={3}>
-            <DataTable
-              rows={rows}
-              columns={columns}
-            />
+            {
+              columns.length>0 ? 
+              (<DataTable
+                rows={rows}
+                columns={columns}
+              />):
+              (
+                <Typography variant="h6" align="center">Selecione os filtros para exibir dados</Typography>
+              )
+            }
           </Box>
         </Container>
       </Container>

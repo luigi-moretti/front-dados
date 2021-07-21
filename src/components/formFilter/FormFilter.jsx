@@ -12,20 +12,26 @@ import MenuItem from '@material-ui/core/MenuItem';
 import InputLabel from '@material-ui/core/InputLabel';
 import Chip from '@material-ui/core/Chip';
 import Input from '@material-ui/core/Input';
+import TextField from '@material-ui/core/TextField';
 
 function FormFilter({ setParametros }) {
     const [dataInicial, setDataInicial] = useState(moment().format('YYYY-MM-DD HH:mm:ss'));
     const [dataFinal, setDataFinal] = useState(moment().format('YYYY-MM-DD HH:mm:ss'));
-    const [tipoDado, setTipoDado] = useState('');
+    const [tipoDado, setTipoDado] = useState('CTE');
     const [status, setStatus] = useState([]);
-    
-    const statusBase=['CANCELADO', 'AUTORIZADO'];
+    const [chaves, setChaves] = useState('');
 
-    const handleSubmit = (tipoDado, dataInicial, dataFinal) => {
+    const statusBase = ['CANCELADO', 'AUTORIZADO'];
+
+    const tipoDadoBase = ['CTE','MDFE']
+
+    const handleSubmit = (tipoDado, dataInicial, dataFinal, status, chaves) => {
         setParametros({
             tipoDado: tipoDado,
             dataInicial: dataInicial,
-            dataFinal: dataFinal
+            dataFinal: dataFinal,
+            status:status,
+            chaves:chaves
         });
     }
 
@@ -33,14 +39,18 @@ function FormFilter({ setParametros }) {
         setTipoDado(event.target.value);
     };
 
-      const handleChangeStatus = (event) => {
+    const handleChangeStatus = (event) => {
         setStatus(event.target.value);
-      };
+    };
+
+    const handleChangeChave = (event) =>{
+        setChaves(event.target.value)
+    }
 
     return (
         <form onSubmit={(evento) => {
             evento.preventDefault();
-            handleSubmit(tipoDado, dataInicial, dataFinal);
+            handleSubmit(tipoDado, dataInicial, dataFinal, status, chaves);
         }}>
             <Typography variant="h4">Relatório de CTe ou MDFe</Typography>
             <Typography variant="h6">Formulário de Filtro de Dados</Typography>
@@ -72,8 +82,9 @@ function FormFilter({ setParametros }) {
                                 displayEmpty
                                 required
                             >
-                                <MenuItem value={'cte'}>CTe</MenuItem>
-                                <MenuItem value={'mdfe'}>MDFe</MenuItem>
+                                {tipoDadoBase.map((item)=>{return(
+                                    <MenuItem value={item}>{item}</MenuItem>)
+                                })}
                             </Select>
                         </FormControl>
                     </Grid>
@@ -102,7 +113,7 @@ function FormFilter({ setParametros }) {
                                 renderValue={(selected) => (
                                     <div>
                                         {selected.map((value) => (
-                                            <Chip key={value} label={value}  />
+                                            <Chip key={value} label={value} />
                                         ))}
                                     </div>
                                 )}
@@ -113,6 +124,33 @@ function FormFilter({ setParametros }) {
                                     </MenuItem>
                                 ))}
                             </Select>
+                        </FormControl>
+                    </Grid>
+                </Grid>
+                <Grid
+                    item
+                    container
+                    direction="row"
+                    justifyContent="space-between"
+                    alignItems="center"
+                >
+
+                    <Grid item sm={4} xs={12}>
+                        <Typography>Selecione as chaves que deseja</Typography>
+                    </Grid>
+                    <Grid item sm={6} xs={12}  >
+                        <FormControl fullWidth>
+                            <TextField
+                                variant="standard"
+                                label="Chave CTe ou MDFe"
+                                placeholder="Insira as chaves separadas por ponto e vírgula"
+                                multiline
+                                rows={4}
+                                rowsMax={8}
+                                onChange={handleChangeChave}
+                                value={chaves}
+                                fullWidth
+                            />
                         </FormControl>
                     </Grid>
                 </Grid>
@@ -153,7 +191,7 @@ function FormFilter({ setParametros }) {
                             <KeyboardDateTimePicker
                                 variant="inline"
                                 ampm={false}
-                                label="Data Inicial"
+                                label="Data Final"
                                 value={dataFinal}
                                 onChange={(evento) => {
                                     setDataFinal(moment(evento._d).format('YYYY-MM-DD HH:mm:ss'));

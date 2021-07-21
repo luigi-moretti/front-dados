@@ -35,7 +35,7 @@ export default function DataTable({ rows, columns }) {
         <TableHead>
           <TableRow>
               {columns.map((coluna)=>{
-                  return(<TableCell align="right">{coluna}</TableCell>)
+                  return(<TableCell key={coluna} align="right">{coluna}</TableCell>)
               })}
           </TableRow>
         </TableHead>
